@@ -1,0 +1,35 @@
+import com.microsoft.playwright.*;
+import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+
+import java.util.Collections;
+
+public class StatusCodeInterceptionTest {
+    Playwright playwright;
+    Browser browser;
+    BrowserContext context;
+    Page page;
+
+    @BeforeEach
+    public void setup(){
+        playwright = Playwright.create();
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+        context = browser.newContext();
+        page = context.newPage();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        if (page != null) page.close();
+        if (context != null) context.close();
+        if (browser != null) browser.close();
+        if (playwright != null) playwright.close();
+    }
+
+    @Test
+    public void testMockedStatusCode(){
+        page.navigate("https://the-internet.herokuapp.com/status_codes");
+    }
+}
