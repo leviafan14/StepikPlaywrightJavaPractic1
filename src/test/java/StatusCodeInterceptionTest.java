@@ -1,5 +1,5 @@
 import com.microsoft.playwright.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +30,15 @@ public class StatusCodeInterceptionTest {
 
     @Test
     public void testMockedStatusCode(){
+        // 1. Сначала настраиваем маршрут перехвата
+        context.route("**/status_code/404", route -> {
+            route.fulfill(new Route.FulfillOptions()
+                    .setStatus(200)
+                    .setHeaders(Collections.singletonMap("Content-Type", "text/html"))
+                    .setBody("<h3>Mocked Success</h3>")
+            );
+        });
+
         page.navigate("https://the-internet.herokuapp.com/status_codes");
     }
 }
